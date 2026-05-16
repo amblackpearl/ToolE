@@ -3,7 +3,7 @@
 # ToolE
 
 
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) [![Open Source](https://img.shields.io/badge/Open%20Source-Yes-green.svg)](https://opensource.org/) [![website](https://img.shields.io/badge/Website-Live-green.svg)](https://amblackpearl.github.io/ToolE/) [![GitHub Stars](https://img.shields.io/github/stars/dibow/ToolE.svg?style=social)](https://github.com/dibow/ToolE/stargazers) [![GitHub Forks](https://img.shields.io/github/forks/dibow/ToolE.svg?style=social)](https://github.com/dibow/ToolE/network) [![GitHub Issues](https://img.shields.io/github/issues/dibow/ToolE)](https://github.com/dibow/ToolE/issues)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) [![Open Source](https://img.shields.io/badge/Open%20Source-Yes-green.svg)](https://opensource.org/) [![website](https://img.shields.io/badge/Website-Live-green.svg)](https://amblackpearl.github.io/ToolE/) [![GitHub Stars](https://img.shields.io/github/stars/amblackpearl/ToolE.svg?style=social)](https://github.com/amblackpearl/ToolE/stargazers) [![GitHub Forks](https://img.shields.io/github/forks/amblackpearl/ToolE.svg?style=social)](https://github.com/amblackpearl/ToolE/network) [![GitHub Issues](https://img.shields.io/github/issues/amblackpearl/ToolE)](https://github.com/amblackpearl/ToolE/issues)
 
 
 </div>
