@@ -1,0 +1,597 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Electronic Toolbox</title>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&family=IBM+Plex+Mono:wght@400;600&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/nerdamer@1.1.13/nerdamer.core.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/nerdamer@1.1.13/Algebra.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/nerdamer@1.1.13/Calculus.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/nerdamer@1.1.13/Solve.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/mathlive"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjs@12.4.1/lib/browser/math.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.45/dist/katex.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link rel="stylesheet" href="style/index.css">
+    <link rel="stylesheet" href="style/calc.css">
+</head>
+
+<body>
+
+    <div class="app">
+
+        <!-- ===== DISPLAY ===== -->
+        <div class="display-module" id="mainDisplay">
+            <div class="header">
+                <h1>ELECTRONIC TOOLBOX</h1>
+                <span class="mode-badge" id="modeBadge">v2.0</span>
+            </div>
+            <div class="screen-container">
+                <div class="screen-text" id="screenText">SELECT A TOOL TO BEGIN</div>
+            </div>
+        </div>
+
+        <!-- ===== DASHBOARD GRID ===== -->
+        <div class="tools-grid" id="dashboard"></div>
+
+        <!-- ===== TOOL PANEL ===== -->
+        <div class="tool-panel" id="toolPanel">
+            <div class="tool-toolbar">
+                <button class="back-btn" onclick="closeTool()">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </button>
+                <div class="tool-title" id="toolTitle"></div>
+                <div style="width:40px;flex-shrink:0;"></div>
+            </div>
+            <div class="tool-body" id="toolBody"></div>
+        </div>
+
+        <!-- ===== MODALS (di luar panel, di dalam .app) ===== -->
+        <div id="matrixModal" class="modal-overlay">
+            <div class="modal-box">
+                <h3>Insert Matrix</h3>
+                <div class="modal-inputs">
+                    <label>Rows: <input type="number" id="matRows" value="2" min="1" max="9"></label>
+                    <label>Cols: <input type="number" id="matCols" value="2" min="1" max="9"></label>
+                </div>
+                <div class="modal-actions">
+                    <button class="key op small-text" onclick="insertDynamicMatrix()">Insert</button>
+                    <button class="key del small-text" onclick="closeModal('matrixModal')">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="detMatrixModal" class="modal-overlay">
+            <div class="modal-box">
+                <h3>Determinant Matrix</h3>
+                <div class="modal-inputs">
+                    <label>Rows: <input type="number" id="detMatRows" value="2" min="1" max="9"></label>
+                    <label>Cols: <input type="number" id="detMatCols" value="2" min="1" max="9"></label>
+                </div>
+                <div class="modal-actions">
+                    <button class="key op small-text" onclick="insertDetMatrix()">Insert</button>
+                    <button class="key del small-text" onclick="closeModal('detMatrixModal')">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="invMatrixModal" class="modal-overlay">
+            <div class="modal-box">
+                <h3>Inverse Matrix</h3>
+                <div class="modal-inputs">
+                    <label>Rows: <input type="number" id="invMatRows" value="2" min="1" max="9"></label>
+                    <label>Cols: <input type="number" id="invMatCols" value="2" min="1" max="9"></label>
+                </div>
+                <div class="modal-actions">
+                    <button class="key op small-text" onclick="insertInvMatrix()">Insert</button>
+                    <button class="key del small-text" onclick="closeModal('invMatrixModal')">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="trnMatrixModal" class="modal-overlay">
+            <div class="modal-box">
+                <h3>Transpose Matrix</h3>
+                <div class="modal-inputs">
+                    <label>Rows: <input type="number" id="trnMatRows" value="2" min="1" max="9"></label>
+                    <label>Cols: <input type="number" id="trnMatCols" value="2" min="1" max="9"></label>
+                </div>
+                <div class="modal-actions">
+                    <button class="key op small-text" onclick="insertTrnMatrix()">Insert</button>
+                    <button class="key del small-text" onclick="closeModal('trnMatrixModal')">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="calculator">
+            <!-- ===== DISPLAY ===== -->
+            <div class="display-module">
+                <div class="header">
+                    <h1>CALCULATOR</h1>
+                    <span class="mode-badge" id="modeBadge">RAD</span>
+                </div>
+                <div class="screen-container">
+                    <math-field id="mf" math-virtual-keyboard-policy="manual"></math-field>
+                    <div class="result-row">
+                        <div class="result" id="result">0</div>
+                        <button class="deg-btn" id="degBtn" onclick="toggleDeg()">RAD</button>
+                    </div>
+                </div>
+            </div>
+            <!-- ===== KEYBOARD ===== -->
+            <div class="keyboard">
+                <div class="tabs">
+                    <button class="back-btn" onclick="closeCalc()">
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </button>
+                    <button class="tab active" data-tab="algebra">Algebra</button>
+                    <button class="tab" data-tab="trigonometry">Trig</button>
+                    <button class="tab" data-tab="calculus">Calculus</button>
+                    <button class="tab" data-tab="matrices">Matrix</button>
+                </div>
+
+                <div class="keys-area">
+
+                    <!-- ========== ALGEBRA ========== -->
+                    <div class="panel active" id="algebra">
+                        <!-- Row 1: fractions, powers, abs, factorial, equals -->
+                        <button class="key op small-text" onclick="ins('\\frac{#@}{#?}')"><math>
+                                <mfrac>
+                                    <mi>⬚</mi>
+                                    <mi>⬚</mi>
+                                </mfrac>
+                            </math></button>
+                        <button class="key op small-text" onclick="ins('^{2}')"><math>
+                                <msup>
+                                    <mi>x</mi>
+                                    <mn>2</mn>
+                                </msup>
+                            </math></button>
+                        <button class="key op small-text" onclick="ins('^{#?}')"><math>
+                                <msup>
+                                    <mi>x</mi>
+                                    <mi>⬚</mi>
+                                </msup>
+                            </math></button>
+                        <button class="key op small-text" onclick="ins('|#?|')">
+                            <math>
+                                <mrow>
+                                    <mo>|</mo>
+                                    <mi>⬚</mi>
+                                    <mo>|</mo>
+                                </mrow>
+                            </math>
+                        </button>
+                        <button class="key op small-text" onclick="ins('#@!')">n!</button>
+                        <button class="key eq" onclick="calculate()">=</button>
+
+                        <!-- Row 2: roots, logs, inequalities -->
+                        <button class="key op small-text" onclick="ins('\\sqrt{#?}')"><math>
+                                <mroot>
+                                    <mi>⬚</mi>
+                                    <mn>2</mn>
+                                </mroot>
+                            </math></button>
+                        <button class="key op small-text" onclick="ins('\\sqrt[#?]{#?}')"><math>
+                                <mroot>
+                                    <mi>⬚</mi>
+                                    <mi>⬚</mi>
+                                </mroot>
+                            </math></button>
+                        <button class="key op small-text" onclick="ins('\\log(#?)')">
+                            <math style="font-size: 0.75rem;">
+                                <mrow>
+                                    <msub>
+                                        <mi>log</mi>
+                                        <mn>10</mn>
+                                    </msub>
+                                    <mo>(</mo>
+                                    <mi>⬚</mi>
+                                    <mo>)</mo>
+                                </mrow>
+                            </math></button>
+                        <button class="key op small-text" onclick="ins('\\log_{#@}(#?)')">
+                            <math style="font-size: 0.75rem;">
+                                <mrow>
+                                    <msub>
+                                        <mi>log</mi>
+                                        <mi>⬚</mi>
+                                    </msub>
+                                    <mo lspace="0" rspace="0">(</mo>
+                                    <mi>⬚</mi>
+                                    <mo>)</mo>
+                                </mrow>
+                            </math></button>
+                        <button class="key op small-text" onclick="ins('\\leq')">≤</button>
+                        <button class="key op small-text" onclick="ins('\\geq')">≥</button>
+
+                        <!-- Row 3: inequality, parens, numbers -->
+                        <button class="key op" onclick="ins('<')">&lt;</button>
+                        <button class="key op" onclick="ins('>')">&gt;</button>
+                        <button class="key" onclick="ins('7')">7</button>
+                        <button class="key" onclick="ins('8')">8</button>
+                        <button class="key" onclick="ins('9')">9</button>
+                        <button class="key op" onclick="ins('/')">÷</button>
+
+                        <!-- Row 4: numbers, operators -->
+                        <button class="key op" onclick="ins('(')">(</button>
+                        <button class="key op" onclick="ins(')')">)</button>
+                        <button class="key" onclick="ins('4')">4</button>
+                        <button class="key" onclick="ins('5')">5</button>
+                        <button class="key" onclick="ins('6')">6</button>
+                        <button class="key op" onclick="ins('\\times')">×</button>
+
+                        <!-- Row 5: symbols, numbers -->
+                        <button class="key sym" onclick="ins('\\pi')">π</button>
+                        <button class="key sym" onclick="ins('i')">i</button>
+                        <button class="key" onclick="ins('1')">1</button>
+                        <button class="key" onclick="ins('2')">2</button>
+                        <button class="key" onclick="ins('3')">3</button>
+                        <button class="key op" onclick="ins('-')">−</button>
+
+                        <!-- Row 6: variables, numbers, operators -->
+                        <button class="key sym" onclick="ins('x')">x</button>
+                        <button class="key sym" onclick="ins('y')">y</button>
+                        <button class="key" onclick="ins('0')">0</button>
+                        <button class="key" onclick="ins('.')">.</button>
+                        <button class="key" onclick="ins('%')">%</button>
+                        <button class="key op" onclick="ins('+')">+</button>
+
+                        <!-- Row 7: navigation, clear -->
+                        <button class="key op small-text" onclick="moveCursor('left')">←</button>
+                        <button class="key op small-text" onclick="moveCursor('right')">→</button>
+                        <button class="key del span2" onclick="backspace()"><i
+                                class="fa-solid fa-delete-left"></i></button></button>
+                        <button class="key del span2" onclick="clearAll()">AC</button>
+                    </div>
+
+                    <!-- ========== TRIGONOMETRY ========== -->
+                    <div class="panel" id="trigonometry">
+                        <!-- Row 1 -->
+                        <button class="key op small-text" onclick="ins('\\frac{#@}{#?}')"><math>
+                                <mfrac>
+                                    <mi>⬚</mi>
+                                    <mi>⬚</mi>
+                                </mfrac>
+                            </math></button>
+                        <button class="key op small-text" onclick="ins('\\sin(#?)')">sin</button>
+                        <button class="key op small-text" onclick="ins('\\cos(#?)')">cos</button>
+                        <button class="key op small-text" onclick="ins('\\tan(#?)')">tan</button>
+                        <button class="key op small-text" onclick="ins('\\arcsin(#?)')">sin⁻¹</button>
+                        <button class="key eq" onclick="calculate()">=</button>
+
+                        <!-- Row 2 -->
+                        <button class="key op small-text" onclick="ins('\\sqrt{#?}')"><math>
+                                <mroot>
+                                    <mi>⬚</mi>
+                                    <mn>2</mn>
+                                </mroot>
+                            </math></button>
+                        <button class="key op small-text" onclick="ins('\\cot(#?)')">cot</button>
+                        <button class="key op small-text" onclick="ins('\\sec(#?)')">sec</button>
+                        <button class="key op small-text" onclick="ins('\\csc(#?)')">csc</button>
+                        <button class="key op small-text" onclick="ins('\\arccos(#?)')">cos⁻¹</button>
+                        <button class="key op small-text" onclick="ins('\\arctan(#?)')">tan⁻¹</button>
+
+                        <!-- Row 3 -->
+                        <button class="key op small-text" onclick="ins('^{2}')"><math>
+                                <msup>
+                                    <mi>x</mi>
+                                    <mn>2</mn>
+                                </msup>
+                            </math></button>
+                        <button class="key op small-text" onclick="ins('^{#?}')"><math>
+                                <msup>
+                                    <mi>x</mi>
+                                    <mi>⬚</mi>
+                                </msup>
+                            </math></button>
+                        <button class="key" onclick="ins('7')">7</button>
+                        <button class="key" onclick="ins('8')">8</button>
+                        <button class="key" onclick="ins('9')">9</button>
+                        <button class="key op" onclick="ins('/')">÷</button>
+
+                        <!-- Row 4 -->
+                        <button class="key sym" onclick="ins('\\pi')">π</button>
+                        <button class="key op small-text" onclick="ins('\\degree')">°</button>
+                        <button class="key" onclick="ins('4')">4</button>
+                        <button class="key" onclick="ins('5')">5</button>
+                        <button class="key" onclick="ins('6')">6</button>
+                        <button class="key op" onclick="ins('\\times')">×</button>
+
+                        <!-- Row 5 -->
+                        <button class="key op" onclick="ins('(')">(</button>
+                        <button class="key op" onclick="ins(')')">)</button>
+                        <button class="key" onclick="ins('1')">1</button>
+                        <button class="key" onclick="ins('2')">2</button>
+                        <button class="key" onclick="ins('3')">3</button>
+                        <button class="key op" onclick="ins('-')">−</button>
+
+                        <!-- Row 6 -->
+                        <button class="key sym" onclick="ins('x')">x</button>
+                        <button class="key sym" onclick="ins('y')">y</button>
+                        <button class="key" onclick="ins('0')">0</button>
+                        <button class="key" onclick="ins('.')">.</button>
+                        <button class="key" onclick="ins('%')">%</button>
+                        <button class="key op" onclick="ins('+')">+</button>
+
+                        <!-- Row 7 -->
+                        <button class="key op small-text" onclick="moveCursor('left')">←</button>
+                        <button class="key op small-text" onclick="moveCursor('right')">→</button>
+                        <button class="key del span2" onclick="backspace()"><i
+                                class="fa-solid fa-delete-left"></i></button></button>
+                        <button class="key del span2" onclick="clearAll()">AC</button>
+                    </div>
+
+                    <!-- ========== CALCULUS ========== -->
+                    <div class="panel" id="calculus">
+                        <!-- Row 1: combinatorics, exponentials, logs -->
+                        <button class="key op small-text"
+                            onclick="ins('\\_{#@}C_{#?}')"><sup>⬚</sup>C<sub>⬚</sub></button>
+                        <button class="key op small-text"
+                            onclick="ins('\\_{#@}P_{#?}')"><sup>⬚</sup>P<sub>⬚</sub></button>
+                        <button class="key op small-text" onclick="ins('\\exp(#?)')">eˣ</button>
+                        <button class="key op small-text" onclick="ins('\\ln(#?)')">ln</button>
+                        <button class="key op small-text" onclick="ins('\\log(#?)')">
+                            <math style="font-size: 0.75rem;">
+                                <mrow>
+                                    <msub>
+                                        <mi>log</mi>
+                                        <mn>10</mn>
+                                    </msub>
+                                    <mo>(</mo>
+                                    <mi>⬚</mi>
+                                    <mo>)</mo>
+                                </mrow>
+                            </math></button>
+                        <button class="key eq" onclick="calculate()">=</button>
+
+                        <!-- Row 2: roots, sigma, integrals, limit -->
+                        <button class="key op small-text" onclick="ins('\\sqrt[#?]{#?}')"><math>
+                                <mroot>
+                                    <mi>⬚</mi>
+                                    <mi>⬚</mi>
+                                </mroot>
+                            </math></button>
+                        <button class="key op small-text" onclick="ins('\\sum_{#?}^{#?}')"><math>
+                                <munderover>
+                                    <mo>∑</mo>
+                                    <mi>⬚</mi>
+                                    <mi>⬚</mi>
+                                </munderover>
+                            </math></button>
+                        <button class="key op small-text" onclick="ins('\\int_{#?}^{#?} {#?}\\,d{#?}')">
+                            <math>
+                                <semantics>
+                                    <mrow>
+                                        <msubsup>
+                                            <mo>∫</mo>
+                                            <mrow>
+                                                <mi>⬚</mi>
+                                            </mrow>
+                                            <mrow>
+                                                <mi>⬚</mi>
+                                            </mrow>
+                                        </msubsup>
+                                        <mo>d</mo>
+                                        <mrow>
+                                            <mi>⬚</mi>
+                                        </mrow>
+                                    </mrow>
+                                    <annotation encoding="text/plain">integral of placeholder from
+                                        placeholder
+                                    </annotation>
+                                </semantics>
+                            </math>
+                        </button>
+                        <button class="key op small-text" onclick="ins('\\int{#?} \\, d{#?}')"><math>
+                                <mrow>
+                                    <mo>∫</mo>
+                                    <mi>⬚</mi>
+                                    <mo>d</mo>
+                                    <mi>⬚</mi>
+                                </mrow>
+                            </math></button>
+                        <button class="key op small-text" onclick="ins('\\int{#?} \\, dx')"><math>
+                                <mrow>
+                                    <mo>∫</mo>
+                                    <mi>⬚</mi>
+                                    <mo>dx</mo>
+                                </mrow>
+                            </math></button>
+                        <button class="key op small-text" onclick="ins('\\lim_{#? \\to #?}')"><math>
+                                <munder>
+                                    <mo>lim</mo>
+                                    <mrow>
+                                        <mi>⬚</mi>
+                                        <mo>→</mo>
+                                        <mi>⬚</mi>
+                                    </mrow>
+                                </munder>
+                            </math></button>
+
+                        <!-- Row 3 -->
+                        <button class="key op small-text" onclick="ins('^{2}')"><math>
+                                <msup>
+                                    <mi>x</mi>
+                                    <mn>2</mn>
+                                </msup>
+                            </math></button>
+                        <button class="key op small-text" onclick="ins('^{#?}')"><math>
+                                <msup>
+                                    <mi>x</mi>
+                                    <mi>⬚</mi>
+                                </msup>
+                            </math></button>
+                        <button class="key" onclick="ins('7')">7</button>
+                        <button class="key" onclick="ins('8')">8</button>
+                        <button class="key" onclick="ins('9')">9</button>
+                        <button class="key op" onclick="ins('/')">÷</button>
+
+                        <!-- Row 4 -->
+                        <button class="key sym" onclick="ins('e')">e</button>
+                        <button class="key sym" onclick="ins('\\infty')">∞</button>
+                        <button class="key" onclick="ins('4')">4</button>
+                        <button class="key" onclick="ins('5')">5</button>
+                        <button class="key" onclick="ins('6')">6</button>
+                        <button class="key op" onclick="ins('\\times')">×</button>
+
+                        <!-- Row 5 -->
+                        <button class="key op" onclick="ins('(')">(</button>
+                        <button class="key op" onclick="ins(')')">)</button>
+                        <button class="key" onclick="ins('1')">1</button>
+                        <button class="key" onclick="ins('2')">2</button>
+                        <button class="key" onclick="ins('3')">3</button>
+                        <button class="key op" onclick="ins('-')">−</button>
+
+                        <!-- Row 6 -->
+                        <button class="key sym" onclick="ins('x')">x</button>
+                        <button class="key sym" onclick="ins('y')">y</button>
+                        <button class="key" onclick="ins('0')">0</button>
+                        <button class="key" onclick="ins('.')">.</button>
+                        <button class="key" onclick="ins('%')">%</button>
+                        <button class="key op" onclick="ins('+')">+</button>
+
+                        <!-- Row 7 -->
+                        <button class="key op small-text" onclick="moveCursor('left')">←</button>
+                        <button class="key op small-text" onclick="moveCursor('right')">→</button>
+                        <button class="key del span2" onclick="backspace()"><i
+                                class="fa-solid fa-delete-left"></i></button></button>
+                        <button class="key del span2" onclick="clearAll()">AC</button>
+                    </div>
+
+                    <!-- ========== MATRICES ========== -->
+                    <div class="panel" id="matrices">
+                        <!-- Row 1 -->
+                        <button class="key op small-text" onclick="ins('\\frac{#@}{#?}')"><math>
+                                <mfrac>
+                                    <mi>⬚</mi>
+                                    <mi>⬚</mi>
+                                </mfrac>
+                            </math></button>
+                        <button class="key op small-text" onclick="ins('^{2}')"><math>
+                                <msup>
+                                    <mi>x</mi>
+                                    <mn>2</mn>
+                                </msup>
+                            </math></button>
+                        <button class="key op small-text" onclick="ins('^{#?}')"><math>
+                                <msup>
+                                    <mi>x</mi>
+                                    <mi>⬚</mi>
+                                </msup>
+                            </math></button>
+                        <button class="key op small-text" onclick="ins('|#?|')"><math>
+                                <mrow>
+                                    <mo>|</mo>
+                                    <mi>⬚</mi>
+                                    <mo>|</mo>
+                                </mrow>
+                            </math></button>
+                        <button class="key op small-text" onclick="openMatrixModal()">[ ]</button>
+                        <button class="key eq" onclick="calculate()">=</button>
+
+                        <!-- Row 2 -->
+                        <button class="key op small-text" onclick="ins('\\sqrt{#?}')"><math>
+                                <mroot>
+                                    <mi>⬚</mi>
+                                    <mn>2</mn>
+                                </mroot>
+                            </math></button>
+                        <button class="key op small-text" onclick="ins('\\sqrt[#?]{#?}')"><math>
+                                <mroot>
+                                    <mi>⬚</mi>
+                                    <mi>⬚</mi>
+                                </mroot>
+                            </math></button>
+                        <button class="key op small-text" onclick="ins('\\log(#?)')"><math style="font-size: 0.75rem;">
+                                <mrow>
+                                    <msub>
+                                        <mi>log</mi>
+                                        <mn>10</mn>
+                                        <mo>(</mo>
+                                        <mi>⬚</mi>
+                                        <mo>)</mo>
+                                    </msub>
+                                </mrow>
+                            </math></button>
+                        <button class="key op small-text" onclick="ins('\\log_{#@}(#?)')"><math
+                                style="font-size: 0.75rem;">
+                                <mrow>
+                                    <msub>
+                                        <mi>log</mi>
+                                        <mi>n</mi>
+                                    </msub>
+                                    <mo>(</mo>
+                                    <mi>⬚</mi>
+                                    <mo>)</mo>
+                                </mrow>
+                            </math></button>
+                        <button class="key op small-text" onclick="openDetMatrixModal()">det</button>
+                        <button class="key op small-text" onclick="openInvMatrixModal()">inv</button>
+
+                        <!-- Row 3 -->
+                        <button class="key op small-text" onclick="openTrnMatrixModal()">trn</button>
+                        <button class="key op small-text" onclick="ins('\\vec{#?}')"><math>
+                                <mover>
+                                    <mi>x</mi>
+                                    <mo>⃑</mo>
+                                </mover>
+                            </math></button>
+                        <button class="key" onclick="ins('7')">7</button>
+                        <button class="key" onclick="ins('8')">8</button>
+                        <button class="key" onclick="ins('9')">9</button>
+                        <button class="key op" onclick="ins('/')">÷</button>
+
+                        <!-- Row 4 -->
+                        <button class="key op" onclick="ins('(')">(</button>
+                        <button class="key op" onclick="ins(')')">)</button>
+                        <button class="key" onclick="ins('4')">4</button>
+                        <button class="key" onclick="ins('5')">5</button>
+                        <button class="key" onclick="ins('6')">6</button>
+                        <button class="key op" onclick="ins('\\times')">×</button>
+
+                        <!-- Row 5 -->
+                        <button class="key sym" onclick="ins('\\pi')">π</button>
+                        <button class="key sym" onclick="ins('i')">i</button>
+                        <button class="key" onclick="ins('1')">1</button>
+                        <button class="key" onclick="ins('2')">2</button>
+                        <button class="key" onclick="ins('3')">3</button>
+                        <button class="key op" onclick="ins('-')">−</button>
+
+                        <!-- Row 6 -->
+                        <button class="key sym" onclick="ins('x')">x</button>
+                        <button class="key sym" onclick="ins('y')">y</button>
+                        <button class="key" onclick="ins('0')">0</button>
+                        <button class="key" onclick="ins('.')">.</button>
+                        <button class="key" onclick="ins('%')">%</button>
+                        <button class="key op" onclick="ins('+')">+</button>
+
+                        <!-- Row 7 -->
+                        <button class="key op small-text" onclick="moveCursor('left')">←</button>
+                        <button class="key op small-text" onclick="moveCursor('right')">→</button>
+                        <button class="key del span2" onclick="backspace()">
+                            <i class="fa-solid fa-delete-left"></i></button>
+                        <button class="key del span2" onclick="clearAll()">AC</button>
+                    </div>
+
+                </div><!-- /keys-area -->
+            </div><!-- /keyboard -->
+        </div>
+
+
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script src="script/index.js"></script>
+    <!-- <script src="script/gcalc.js"></script> -->
+</body>
+
+</html>
