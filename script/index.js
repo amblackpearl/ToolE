@@ -10,18 +10,18 @@ theCalc.style.display = 'none';
 DATA: 9 alat elektronik
 ============================================================ */
 const tools = [
-    { id: 'calc', name: 'Scientific \nCalculator', desc: 'Algebra \u00B7 Trig \u00B7 Calculus \u00B7 Matrix', logo: 'assets/calc.png', featured: false },
-    { id: 'ohm', name: "Ohm's Law", desc: 'V = I \u00D7 R', logo: 'assets/ohm.png' },
-    { id: 'vdiv', name: 'Voltage Divider', desc: 'Vout Calc', logo: 'assets/divR.png' },
-    { id: 'rc', name: 'RC Time Const.', desc: '\u03C4 = R \u00D7 C', logo: 'assets/rc.png' },
-    { id: 'capcode', name: 'Capacitor Code', desc: '3-Digit Decode', logo: 'assets/cap1.png' },
-    { id: 'rescode', name: 'Resistor Color', desc: '4-Band Code', logo: 'assets/resCol.png' },
-    { id: 'pid', name: 'PID', desc: 'PID Calc', logo: 'assets/pid.png' },
-    { id: 'freq', name: 'Frequency & Period', desc: 'Convert between frequency, period, and wavelength.', logo: 'assets/freq.png' },
-    { id: 'units', name: 'Units Converter', desc: 'Electrical Units Converter', logo: 'assets/units.png' },
-    { id: 'opamp', name: 'Op-Amp Gain', desc: 'Inv / Non-Inv', logo: 'assets/opAmp.png' },
-    { id: 'power', name: 'Power Calc', desc: 'P = V \u00D7 I', logo: 'assets/Power.png' },
-    { id: 'unlocker', name: 'Scribd Unlocker', desc: 'Unlock Document', logo: 'assets/unlock.png' }
+    { id: 'calc', name: 'Scientific \nCalculator', desc: 'Algebra \u00B7 Trig \u00B7 Calculus \u00B7 Matrix', logo: 'assets/calc.webp', featured: false },
+    { id: 'ohm', name: "Ohm's Law", desc: 'V = I \u00D7 R', logo: 'assets/ohm.webp' },
+    { id: 'vdiv', name: 'Voltage Divider', desc: 'Vout Calc', logo: 'assets/divR.webp' },
+    { id: 'rc', name: 'RC Time Const.', desc: '\u03C4 = R \u00D7 C', logo: 'assets/rc.webp' },
+    { id: 'capcode', name: 'Capacitor Code', desc: '3-Digit Decode', logo: 'assets/cap1.webp' },
+    { id: 'rescode', name: 'Resistor Color', desc: '4-Band Code', logo: 'assets/resCol.webp' },
+    { id: 'pid', name: 'PID', desc: 'PID Calc', logo: 'assets/pid.webp' },
+    { id: 'freq', name: 'Frequency & Period', desc: 'Convert between frequency, period, and wavelength.', logo: 'assets/freq.webp' },
+    { id: 'units', name: 'Units Converter', desc: 'Electrical Units Converter', logo: 'assets/units.webp' },
+    { id: 'opamp', name: 'Op-Amp Gain', desc: 'Inv / Non-Inv', logo: 'assets/opAmp.webp' },
+    { id: 'power', name: 'Power Calc', desc: 'P = V \u00D7 I', logo: 'assets/Power.webp' },
+    { id: 'unlocker', name: 'Scribd Unlocker', desc: 'Unlock Document', logo: 'assets/unlock.webp' }
 
 ];
 
