@@ -883,7 +883,7 @@ function initMathField() {
             updateResult();
             if (document.activeElement !== mf) mf.focus();
         });
-        if (window.innerWidth >= 768) setTimeout(() => mf.focus(), 300);
+        // if (window.innerWidth >= 768) setTimeout(() => mf.focus(), 300);
         renderResult('0', '');
         isInitialized = true;
         return true;
